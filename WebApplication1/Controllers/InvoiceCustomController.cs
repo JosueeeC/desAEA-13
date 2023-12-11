@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Models;
+using WebApplication1.Models.Request;
 
 namespace WebApplication1.Controllers
 {
@@ -23,5 +24,33 @@ namespace WebApplication1.Controllers
 
             return response;
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Invoice>> InsertInvoiceCustom(Invoice_Request_v1 request)
+        {
+            try
+            {
+                Invoice invoice = new Invoice();
+                invoice.CustomerId = request.CustomerId;
+                invoice.Date = request.Date;
+                invoice.InvoiceNumber = request.InvoiceNumber;
+                invoice.Total = request.Total;
+
+
+                _projectContext.Invoices.Add(invoice);
+                await _projectContext.SaveChangesAsync();
+
+                return CreatedAtAction("InsertInvoiceCustom", new { id = invoice.InvoiceId }, invoice);
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        
+
     }
 }

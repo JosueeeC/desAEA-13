@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WebApplication1.Models;
+using WebApplication1.Models.Request;
 
 namespace WebApplication1.Controllers
 {
@@ -21,5 +22,70 @@ namespace WebApplication1.Controllers
             return response;
         }
 
+
+        [HttpPost]
+        public async Task<ActionResult<Customer>> InsertCustomer (Customer_Request_v1 request)
+        {
+            try
+            {
+                Customer customer = new Customer();
+                customer.FirstName = request.FirstName;
+                customer.LastName = request.LastName;
+                customer.DocumentNumber = request.DocumentNumber;
+                customer.Enabled = true;
+                
+
+                _projectContext.Customers.Add(customer);
+                await _projectContext.SaveChangesAsync();
+
+                return CreatedAtAction("InsertCustomer", new { id = customer.CustomerId }, customer);
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteCustomerCustom(Customer_Request_v2 request)
+        {
+
+
+            var customer = await _projectContext.Customers.FindAsync(request.CustomerId);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            customer.Enabled = false;
+            await _projectContext.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCustomer (Customer_Request_v3 request)
+        {
+            try
+            {
+
+                var customer = await _projectContext.Customers.FindAsync(request.CustomerId);
+                customer.DocumentNumber = request.DocumentNumber.ToString();
+
+                await _projectContext.SaveChangesAsync();
+
+
+                return CreatedAtAction("InsertCustomer", new { id = customer.CustomerId }, customer);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
