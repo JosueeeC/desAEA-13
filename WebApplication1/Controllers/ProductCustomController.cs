@@ -58,5 +58,26 @@ namespace WebApplication1.Controllers
 
             return NoContent();
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Product>> UpdatePriceProduct(Product_Request_v3 request)
+        {
+            try
+            {
+                var product = await _projectContext.Products.FindAsync(request.Id);
+                product.Price = request.Price;
+
+                await _projectContext.SaveChangesAsync();
+
+                return CreatedAtAction("UpdatePriceProduct", new { id = product.ProductId }, product);
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -87,5 +87,34 @@ namespace WebApplication1.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> InsertListInvoices(Invoice_Request_v4 request)
+        {
+            try
+            {
+
+                var customer = await _projectContext.Customers.FindAsync(request.CustomerId);
+                foreach(var invoice in request.Invoice)
+                {
+
+                    invoice.CustomerId = request.CustomerId;
+
+                    _projectContext.Customers.Add(customer);
+                    await _projectContext.SaveChangesAsync();
+
+                }
+
+                
+
+                return CreatedAtAction("InsertCustomer", new { id = customer.CustomerId }, customer);
+
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
