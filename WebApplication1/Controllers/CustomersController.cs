@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,7 @@ namespace WebApplication1.Controllers
             _context = context;
         }
 
+        [Authorize]
         // GET: api/Customers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
@@ -28,7 +30,7 @@ namespace WebApplication1.Controllers
           {
               return NotFound();
           }
-            return await _context.Customers.Where(x=> x.Enabled == true).ToListAsync();
+            return await _context.Customers.Where(x=> x.Active == true).ToListAsync();
         }
 
         // GET: api/Customers/5
@@ -109,7 +111,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            customer.Enabled = false;
+            customer.Active = false;
             await _context.SaveChangesAsync();
 
             return NoContent();

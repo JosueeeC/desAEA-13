@@ -32,7 +32,7 @@ namespace WebApplication1.Controllers
                 customer.FirstName = request.FirstName;
                 customer.LastName = request.LastName;
                 customer.DocumentNumber = request.DocumentNumber;
-                customer.Enabled = true;
+                customer.Active = true;
                 
 
                 _projectContext.Customers.Add(customer);
@@ -60,7 +60,7 @@ namespace WebApplication1.Controllers
                 return NotFound();
             }
 
-            customer.Enabled = false;
+            customer.Active = false;
             await _projectContext.SaveChangesAsync();
 
             return NoContent();
@@ -107,7 +107,7 @@ namespace WebApplication1.Controllers
 
                 
 
-                return CreatedAtAction("InsertCustomer", new { id = customer.CustomerId }, customer);
+                return CreatedAtAction("InsertListInvoices", new { id = customer.CustomerId }, customer);
 
             }
             catch (Exception ex)

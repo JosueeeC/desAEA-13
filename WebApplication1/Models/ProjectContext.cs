@@ -13,5 +13,7 @@ namespace WebApplication1.Models
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Detail> Details { get; set; }
+        public DbSet<Users> Users { get; set; }
+        
     }
 }

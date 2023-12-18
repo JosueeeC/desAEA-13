@@ -79,5 +79,30 @@ namespace WebApplication1.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult<Product>> DeleteListProduct(Product_Request_v4 request)
+        {
+            try
+            {
+
+                foreach(var item in request.ProductId)
+                {
+                    var res = _projectContext.Products.FirstOrDefault(x => x.ProductId == item);
+
+                    res.Enabled = false;
+
+                    await _projectContext.SaveChangesAsync();
+
+                }
+
+                return CreatedAtAction("DeleteListProduct", request);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
